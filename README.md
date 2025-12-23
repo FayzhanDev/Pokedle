@@ -8,4 +8,4 @@
 - Changement de nom du projet
 - Changement du logo
 - Rangement des dossiers
-  
+- Changement de fond  
