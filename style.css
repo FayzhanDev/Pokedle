@@ -6,7 +6,7 @@
 body {
   font-family: 'Pokemon', Arial, sans-serif;
   min-height: 100vh;
-  background-image: url("https://www.reddit.com/media?url=https%3A%2F%2Fi.redd.it%2F36sr31w5cqud1.gif");
+  background-image: url("assets/images/pokefond.gif");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom center;
