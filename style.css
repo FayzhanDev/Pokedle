@@ -1,0 +1,178 @@
+@font-face {
+  font-family: 'Pokemon';
+  src: url('Gameboy.ttf') format('truetype');
+}
+
+body {
+  font-family: 'Pokemon', Arial, sans-serif;
+  min-height: 100vh;
+  background-image: url("pokefond.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  margin: 0;
+  /* AJOUTS ICI */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  text-align: center;
+  width: 100%; 
+}
+
+.menu-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+  flex: 1;      
+}
+
+.menu {
+  width: 360px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  margin: 0 auto; /* Ajouté */
+}
+
+.menu:hover {
+  transform: scale(1.2);
+}
+
+.card {
+  background: #f9f6d8;
+  border: 4px solid #2f4f2f;
+  border-radius: 18px;
+  padding: 15px;
+  margin: 0 auto 18px auto; 
+  text-align: center;
+  width: 260px;
+}
+
+.card h2, 
+.card p { 
+  margin: 0 0 10px; 
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+
+.button {
+  background: #6ddc8c;
+  border-radius: 20px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #5bc77a;
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.sous-titre {
+  text-align: center;
+  color: white;
+}
+
+.zarbi2{
+  width: 50px;
+  height: 50px;
+}
+
+.button img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+footer {
+  text-align: center;
+  color: white;
+  width: 100%; /* Ajouté */
+  padding-bottom: 20px;
+}
+
+footer img {
+  width: 80px;
+  height: 80px;
+  transition: transform 0.3s ease; 
+}
+
+footer img:hover {
+  transform: scale(1.2); 
+}
+
+footer .github {
+  width: 70px;
+  height: 70px; 
+}
+
+header img {
+  transition: transform 0.3s ease; 
+}
+
+header img:hover {
+  transform: scale(1.2); 
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+#zone-jeu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+
+#btn-retour-style {
+    width: auto;
+    padding: 10px 30px;
+    margin-top: 20px;
+}
+
+
+.menu-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+
+.pokemon-card-img {
+    width: 240px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: filter 0.5s ease;
+}
+
+
+.pokemon-card-img {
+    width: 240px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: filter 0.4s ease; 
+}
+
+
+.blurred {
+    filter: blur(20px) brightness(0.8);
+}
