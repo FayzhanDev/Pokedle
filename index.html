@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeGuessr</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="icon" type="image/png" href="assets/images/pokeball.png">
+    <link rel="apple-touch-icon" href="assets/images/pokeball.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <a href="javascript:location.reload()">
+            <img class="Titre" src="assets/images/PokeGuessr.png" alt="Logo PokeGuessr">
+        </a>
+        <div id="soustitre-accueil" class="sous-titre">
+            <h2>Tous les jours, devine un Pokemon !</h2>
+        </div>
+        <div id="record-container" style="color: #FFCB05; font-weight: bold; margin-top: 10px; font-size: 1.2rem; text-shadow: 1px 1px black;">
+            RECORD PERSONNEL : <span id="record-count">0</span> 🏆
+        </div>
+    <div class="auth-container">
+                <div id="logged-out-view">
+                    <h2>Espace Dresseur</h2>
+                    <input type="email" id="email" placeholder="Votre Email">
+                    <input type="password" id="password" placeholder="Mot de passe">
+                    <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
+                        <button id="btnSignUp">S'inscrire</button>
+                        <button id="btnSignIn" style="background-color: #3b4cca;">Se connecter</button>
+                    </div>
+                </div>
+
+                <div id="logged-in-view" style="display: none;">
+                    <h2 style="margin: 0;">SALUT, <span id="user-display-name" style="color: #FFCB05;">DRESSEUR</span> !</h2>
+                    <button id="btnLogout" style="background-color: #ff4d4d; color: white; margin-top: 10px; font-size: 0.7rem; padding: 5px 10px;">DÉCONNEXION</button>
+                </div>
+                
+                <p id="message" style="margin-top: 10px; font-size: 0.9rem;"></p>
+    </div>
+    </header>
+
+    <main id="page-content">
+        <div id="menu-principal" class="menu-vertical">
+            <div class="card">
+                <h2>CLASSIQUE</h2>
+                <button class="button" onclick="changerMenu('classique')">
+                    <img src="assets/images/zarbi" alt="Zarbi">
+                    <span>Toutes les générations</span>
+                </button>
+            </div>
+            <div class="card">
+                <h2>CARTE</h2>
+                <button class="button" onclick="changerMenu('carte')">
+                    <img src="assets/images/zarbi2.png" alt="Zarbi2">
+                    <span>Avec une carte floutée</span>
+                </button>
+            </div>
+            <div class="card">
+                <h2>DESCRIPTION</h2>
+                <button class="button" onclick="changerMenu('description')">
+                    <img src="assets/images/salameche.png" alt="Salameche">
+                    <span>Indices du Pokédex</span>
+                </button>
+            </div>
+            <div class="card">
+                <h2>OMBRE</h2>
+                <button class="button" onclick="changerMenu('ombre')">
+                    <img src="assets/images/ombre.png" alt="Ombre">
+                    <span>Devine la silhouette</span>
+                </button>
+            </div>
+            <div class="card">
+                <h2>SHINY</h2>
+                <button class="button" onclick="changerMenu('shiny')">
+                    <img src="assets/images/shiny.png" alt="Shiny">
+                    <span>Trouve le vrai Shiny !</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="zone-jeu" class="hidden">
+            <h2 id="titre-mode" style="text-align: center; color: white; text-shadow: 2px 2px black;"></h2>
+            
+            <div id="contenu-dynamique-du-jeu"></div>
+
+            <div id="devinette-container" class="menu-vertical hidden" style="margin-top: 20px;">
+                <div id="win-streak-container">
+                    SERIE : <span id="streak-count">0</span> 🔥
+                </div>
+
+                <div id="compteur-essais" style="color: #FFCB05; font-weight: bold; margin-bottom: 10px; font-size: 1.2rem; text-shadow: 1px 1px black;">
+                    ESSAIS : 0
+                </div>
+
+                <input type="text" id="input-pokemon" placeholder="Nom du Pokémon..." 
+                       style="padding: 10px; border-radius: 10px; border: 2px solid #2f4f2f; font-family: Arial, sans-serif; width: 250px; text-align: center; font-size: 16px;">
+                
+                <button id="btn-valider" class="button" onclick="verifierReponse()" style="width: 200px; background: #FFCB05; color: #3b4cca; margin-top: 10px;">
+                    VALIDER
+                </button>
+
+                <button id="btn-reveler" class="button" onclick="revelerPokemon()" style="width: 200px; background: #ff4d4d; color: white; margin-top: 5px; font-size: 0.8rem;">
+                    REVELER LE POKEMON
+                </button>
+
+                <button id="btn-rejouer" class="button hidden" onclick="chargerNouveauPokemon()" style="width: 200px; background: #6ddc8c; color: white; margin-top: 5px;">
+                    REJOUER
+                </button>
+                
+                <p id="message-retour" style="color: white; font-weight: bold; text-shadow: 1px 1px black; min-height: 25px; text-align: center; margin-top: 10px;"></p>
+            </div>
+
+            <button class="button" id="btn-retour-style" onclick="retourMenu()" style="margin-top: 30px;">
+                RETOUR AU MENU
+            </button>
+        </div>
+    </main>
+
+    <footer>
+        <p>PokeGuessr.net - 2025</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/iblamegaetan/"><img src="assets/images/insta.png" alt="Instagram"></a>
+            <a href="https://www.youtube.com/@fayzhan5977"><img src="assets/images/youtube.png" alt="YouTube"></a>
+            <a href="https://github.com/FayzhanDev"><img src="assets/images/github.png" alt="GitHub"></a>
+        </div>
+        <p>Developpeur : Gaetan Demoy</p>
+    </footer>
+
+<script>
+const audioCri = new Audio();
+const audioVictoire = new Audio('assets/sounds/capture.mp3');
+const audioEchec = new Audio('assets/sounds/faux.mp3');
+let pokemonATrouver = "";
+let nomAffichage = ""; 
+let modeActuel = "";
+let flouActuel = 20;
+let essais = 0;
+let fini = false;
+window.winStreak = localStorage.getItem("pokemonStreak") || 0;
+window.recordStreak = localStorage.getItem("pokemonRecord") || 0;
+
+function updateStreakDisplay() {
+    
+    document.getElementById('streak-count').innerText = window.winStreak;
+    document.getElementById('record-count').innerText = window.recordStreak;
+    
+    document.getElementById('win-streak-container').style.opacity = (window.winStreak > 0) ? "1" : "0.3";
+    
+    if (parseInt(window.winStreak) > parseInt(window.recordStreak)) {
+        window.recordStreak = window.winStreak;
+        localStorage.setItem("pokemonRecord", window.recordStreak);
+        document.getElementById('record-count').innerText = window.recordStreak;
+
+        if (typeof window.saveRecordToCloud === "function") {
+            window.saveRecordToCloud(window.recordStreak);
+        }
+    }
+}
+
+function simplifierTexte(texte) {
+    if (!texte) return "";
+    return texte.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "").trim();
+}
+
+function enleverAccentsAffichage(texte) {
+    if (!texte) return "";
+    return texte.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+}
+
+async function changerMenu(mode) {
+    modeActuel = mode;
+    document.getElementById('menu-principal').classList.add('hidden');
+    document.getElementById('soustitre-accueil').classList.add('hidden');
+    document.getElementById('zone-jeu').classList.remove('hidden');
+    document.getElementById('titre-mode').innerText = "MODE " + mode.toUpperCase();
+    updateStreakDisplay();
+    await chargerNouveauPokemon();
+}
+
+async function chargerNouveauPokemon() {
+    flouActuel = 10;
+    essais = 0;
+    fini = false;
+    document.getElementById('compteur-essais').innerText = "ESSAIS : 0";
+    document.getElementById('message-retour').innerText = "";
+    document.getElementById('input-pokemon').value = "";
+    document.getElementById('input-pokemon').disabled = false;
+    document.getElementById('input-pokemon').classList.remove('hidden');
+    document.getElementById('btn-valider').classList.remove('hidden');
+    document.getElementById('btn-reveler').classList.remove('hidden');
+    document.getElementById('btn-rejouer').classList.add('hidden');
+    document.getElementById('devinette-container').classList.remove('hidden');
+    updateStreakDisplay();
+
+    const conteneur = document.getElementById('contenu-dynamique-du-jeu');
+    conteneur.innerHTML = '<p style="color: white;">CHARGEMENT...</p>';
+
+    try {
+        if (modeActuel === 'classique') await chargerPokemonClassique();
+        else if (modeActuel === 'carte') await chargerPokemonCarte();
+        else if (modeActuel === 'description') await chargerPokemonDescription();
+        else if (modeActuel === 'ombre') await chargerPokemonOmbre();
+        else if (modeActuel === 'shiny') await chargerPokemonShiny();
+    } catch (e) {
+        console.error(e);
+        conteneur.innerHTML = '<p style="color: white;">ERREUR. REESSAYE.</p>';
+    }
+}
+
+async function chargerPokemonClassique(estOmbre = false) {
+    const idRandom = Math.floor(Math.random() * 1025) + 1;
+    const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${idRandom}`);
+    const dataSpecies = await resSpecies.json();
+    const resBase = await fetch(`https://pokeapi.co/api/v2/pokemon/${idRandom}`);
+    const dataBase = await resBase.json();
+
+    
+    if (dataBase.cries && dataBase.cries.latest) {
+        audioCri.src = dataBase.cries.latest;
+        audioCri.volume = 0.5;
+        audioCri.play(); 
+    }
+
+    const nomFrObj = dataSpecies.names.find(n => n.language.name === "fr");
+    nomAffichage = nomFrObj ? nomFrObj.name : dataSpecies.name;
+    pokemonATrouver = simplifierTexte(nomAffichage);
+
+    const imageURL = dataBase.sprites.other['official-artwork'].front_default || dataBase.sprites.front_default;
+    const styleFiltre = estOmbre ? "filter: brightness(0);" : "filter: brightness(1);";
+
+    document.getElementById('contenu-dynamique-du-jeu').innerHTML = `
+        <div style="text-align: center; margin: 20px;">
+            <img id="image-pokemon" src="${imageURL}" style="width: 200px; ${styleFiltre}">
+        </div>`;
+}
+
+async function chargerPokemonOmbre() { await chargerPokemonClassique(true); }
+
+async function chargerPokemonCarte() {
+    const idRandom = Math.floor(Math.random() * 1025) + 1;
+    const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${idRandom}`);
+    const dataSpecies = await resSpecies.json();
+    const resCard = await fetch(`https://api.tcgdex.net/v2/fr/cards?name=${encodeURIComponent(dataSpecies.name)}`);
+    const cardsData = await resCard.json();
+    const validCards = cardsData.filter(c => c.image !== undefined);
+    if (validCards.length === 0) return chargerPokemonCarte();
+
+    const nomFrObj = dataSpecies.names.find(n => n.language.name === "fr");
+    nomAffichage = nomFrObj ? nomFrObj.name : dataSpecies.name;
+    pokemonATrouver = simplifierTexte(nomAffichage);
+
+    const carte = validCards[Math.floor(Math.random() * validCards.length)];
+    document.getElementById('contenu-dynamique-du-jeu').innerHTML = `
+        <div style="text-align: center; margin: 20px;">
+            <img id="image-pokemon" src="${carte.image}/high.webp" 
+                 style="filter: blur(${flouActuel}px) brightness(0.8); width: 240px; border-radius:10px;">
+        </div>`;
+}
+
+async function chargerPokemonDescription() {
+    const idRandom = Math.floor(Math.random() * 1025) + 1;
+    const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${idRandom}`);
+    const dataSpecies = await resSpecies.json();
+    const nomFrObj = dataSpecies.names.find(n => n.language.name === "fr");
+    nomAffichage = nomFrObj ? nomFrObj.name : dataSpecies.name;
+    pokemonATrouver = simplifierTexte(nomAffichage);
+
+    const entriesFr = dataSpecies.flavor_text_entries.filter(e => e.language.name === "fr");
+    let texte = entriesFr.length > 0 ? entriesFr[Math.floor(Math.random() * entriesFr.length)].flavor_text : "Pas de description disponible.";
+    const regex = new RegExp(nomAffichage, "gi");
+    let texteFinal = texte.replace(regex, "[ POKEMON ]").replace(/[\f\n\r]/g, ' ').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+
+    document.getElementById('contenu-dynamique-du-jeu').innerHTML = `
+        <div class="card" id="image-pokemon" style="width: 85%; max-width: 400px; margin: 20px auto; background:#f9f6d8; border:4px solid #2f4f2f; padding:15px; box-shadow: 4px 4px 0px #2f4f2f;">
+            <p style="font-size: 16px; color: #2f4f2f; font-family: Arial, sans-serif; line-height: 1.4; margin: 0;">"${texteFinal}"</p>
+        </div>`;
+}
+
+async function chargerPokemonShiny() {
+    const idRandom = Math.floor(Math.random() * 1025) + 1;
+    const resSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${idRandom}`);
+    const dataSpecies = await resSpecies.json();
+    const resBase = await fetch(`https://pokeapi.co/api/v2/pokemon/${idRandom}`);
+    const dataBase = await resBase.json();
+
+    const nomFrObj = dataSpecies.names.find(n => n.language.name === "fr");
+    nomAffichage = nomFrObj ? nomFrObj.name : dataSpecies.name;
+    
+    document.getElementById('input-pokemon').classList.add('hidden');
+    document.getElementById('btn-valider').classList.add('hidden');
+
+    const shinyURL = dataBase.sprites.other['official-artwork'].front_shiny || dataBase.sprites.front_shiny;
+    let options = [
+        { isReal: true, filter: "none" },
+        { isReal: false, filter: "hue-rotate(90deg) saturate(1.3)" },
+        { isReal: false, filter: "hue-rotate(180deg) brightness(1.1)" },
+        { isReal: false, filter: "hue-rotate(270deg) contrast(1.2)" }
+    ];
+    options.sort(() => Math.random() - 0.5);
+
+    let htmlOptions = `<p style="color:white; text-align:center; font-weight:bold;">Lequel est le vrai <span style="color:#FFCB05;">${enleverAccentsAffichage(nomAffichage)} SHINY</span> ?</p>
+                       <div id="grille-shiny" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; justify-items: center; margin-top:15px;">`;
+    
+    options.forEach(opt => {
+        htmlOptions += `
+            <div class="option-shiny" onclick="verifierShiny(${opt.isReal}, this)" 
+                 style="cursor: pointer; background: rgba(255,255,255,0.1); border-radius: 15px; padding: 10px; transition: 0.3s;">
+                <img src="${shinyURL}" style="width: 120px; filter: ${opt.filter}; pointer-events: none;">
+            </div>`;
+    });
+    htmlOptions += `</div>`;
+    document.getElementById('contenu-dynamique-du-jeu').innerHTML = htmlOptions;
+}
+
+function verifierReponse() {
+    if(fini) return;
+    const input = document.getElementById('input-pokemon');
+    const saisie = simplifierTexte(input.value);
+    const message = document.getElementById('message-retour');
+    const image = document.getElementById('image-pokemon');
+
+    if (saisie === pokemonATrouver) {
+        lancerConfettis();
+        gagner();
+    } else {
+        essais++;
+        document.getElementById('compteur-essais').innerText = "ESSAIS : " + essais;
+        if (modeActuel === 'carte' && image && flouActuel > 0) {
+            flouActuel = Math.max(0, flouActuel - 4);
+            image.style.filter = `blur(${flouActuel}px) brightness(0.8)`;
+        }
+        message.innerText = "CE N'EST PAS CA...";
+        message.style.color = "#ff4d4d";
+        input.value = "";
+        audioEchec.play();
+    }
+}
+
+function verifierShiny(estCorrect, element) {
+    if(fini) return;
+    if (estCorrect) {
+        lancerConfettis();
+        gagner();
+    } else {
+        essais++;
+        audioEchec.play();
+        element.style.opacity = "0.5";
+        element.style.pointerEvents = "none";
+        document.getElementById('compteur-essais').innerText = "ESSAIS : " + essais;
+        winStreak = 0;
+        localStorage.setItem("pokemonStreak", 0);
+        updateStreakDisplay();
+    }
+}
+
+function lancerConfettis() {
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#FFCB05', '#3b4cca', '#ff4d4d', '#6ddc8c']
+    });
+}
+
+function revelerPokemon() {
+    const message = document.getElementById('message-retour');
+    message.innerText = "C'ETAIT : " + enleverAccentsAffichage(nomAffichage);
+    message.style.color = "#FFCB05";
+    winStreak = 0;
+    localStorage.setItem("pokemonStreak", 0);
+    updateStreakDisplay();
+    terminerPartie();
+}
+
+function gagner() {
+    const message = document.getElementById('message-retour');
+    
+    if (modeActuel === 'shiny') {
+        message.innerText = "INCROYABLE ! TU AS TROUVE LE SHINY !";
+        audioVictoire.play();
+    } else {
+        message.innerText = "BRAVO ! C'EST BIEN " + enleverAccentsAffichage(nomAffichage);
+        audioVictoire.play();
+    }
+    
+    message.style.color = "#6ddc8c";
+    winStreak = parseInt(winStreak) + 1;
+    localStorage.setItem("pokemonStreak", winStreak);
+    updateStreakDisplay();
+    terminerPartie();
+}
+
+function terminerPartie() {
+    fini = true;
+    if (modeActuel === 'shiny') {
+        const images = document.querySelectorAll('.option-shiny img');
+        images.forEach(img => img.style.filter = "none");
+    }
+    const image = document.getElementById('image-pokemon');
+    if (image) {
+        image.style.filter = "blur(0px) brightness(1)";
+        image.classList.add('zoom-victoire');
+    }
+    document.getElementById('input-pokemon').disabled = true;
+    document.getElementById('btn-valider').classList.add('hidden');
+    document.getElementById('btn-reveler').classList.add('hidden');
+    document.getElementById('btn-rejouer').classList.remove('hidden');
+}
+
+function retourMenu() {
+    document.getElementById('menu-principal').classList.remove('hidden');
+    document.getElementById('soustitre-accueil').classList.remove('hidden');
+    document.getElementById('zone-jeu').classList.add('hidden');
+}
+
+document.getElementById('input-pokemon').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') verifierReponse();
+});
+
+updateStreakDisplay();
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword, 
+        onAuthStateChanged,
+        signOut 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+        getFirestore, 
+        doc, 
+        setDoc, 
+        getDoc 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_b7RoUwMovvxIjQjOT443YslIv1wIprY",
+        authDomain: "pokeguessr-b920a.firebaseapp.com",
+        projectId: "pokeguessr-b920a",
+        storageBucket: "pokeguessr-b920a.firebasestorage.app",
+        messagingSenderId: "857944169264",
+        appId: "1:857944169264:web:31b07dfe4a8e9a66f986f5",
+        measurementId: "G-RF4WMVVJMQ"
+    };
+
+  
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const btnSignUp = document.getElementById('btnSignUp');
+    const btnSignIn = document.getElementById('btnSignIn');
+    const btnLogout = document.getElementById('btnLogout');
+    const messagePara = document.getElementById('message');
+    const loggedOutView = document.getElementById('logged-out-view');
+    const loggedInView = document.getElementById('logged-in-view');
+    const userDisplayName = document.getElementById('user-display-name');
+
+
+    window.saveRecordToCloud = async function(score) {
+        const user = auth.currentUser;
+        if (user) {
+            try {
+                await setDoc(doc(db, "users", user.uid), {
+                    record: parseInt(score),
+                    email: user.email,
+                    lastUpdated: new Date()
+                }, { merge: true });
+                console.log("☁️ Record synchronise sur Firebase !");
+            } catch (e) {
+                console.error("Erreur de synchro :", e);
+            }
+        }
+    };
+
+
+    btnSignUp.addEventListener('click', () => {
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(() => { messagePara.innerText = ""; })
+            .catch(handleAuthErrors);
+    });
+
+
+    btnSignIn.addEventListener('click', () => {
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => { messagePara.innerText = ""; })
+            .catch(handleAuthErrors);
+    });
+
+
+    btnLogout.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            messagePara.innerText = "Deconnecte.";
+            messagePara.style.color = "white";
+        });
+    });
+
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            loggedOutView.style.display = 'none';
+            loggedInView.style.display = 'block';
+            userDisplayName.innerText = user.email.split('@')[0].toUpperCase();
+
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const cloudRecord = parseInt(docSnap.data().record) || 0;
+                const localRecord = parseInt(localStorage.getItem("pokemonRecord")) || 0;
+
+                if (cloudRecord > localRecord) {
+                    localStorage.setItem("pokemonRecord", cloudRecord);
+                    
+                    window.recordStreak = cloudRecord;
+                    
+                    const display = document.getElementById('record-count');
+                    if(display) display.innerText = cloudRecord;
+
+                    if (typeof window.updateStreakDisplay === "function") {
+                        window.updateStreakDisplay();
+                    }
+                    console.log("✅ Record synchronisé depuis le Cloud : " + cloudRecord);
+                }
+            }
+        } else {
+            loggedOutView.style.display = 'block';
+            loggedInView.style.display = 'none';
+        }
+    });
+
+
+    function handleAuthErrors(error) {
+        let errorMsg = "Erreur : ";
+        switch (error.code) {
+            case 'auth/email-already-in-use': errorMsg = "Cet email est deja utilise."; break;
+            case 'auth/invalid-email': errorMsg = "Email invalide."; break;
+            case 'auth/weak-password': errorMsg = "Mot de passe trop court (6 min)."; break;
+            case 'auth/invalid-credential': errorMsg = "Identifiants incorrects."; break;
+            default: errorMsg += error.message;
+        }
+        messagePara.innerText = errorMsg;
+        messagePara.style.color = "#ff4d4d";
+    }
+</script>
+</body>
+</html>
