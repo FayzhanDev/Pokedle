@@ -13,9 +13,14 @@ Petite mise à jour pour upgrade le visuel et ajout d'une features
 - Changement de fond  
 
 24/12/2025
-C'est Noël donc grosse mise à jour !!!
+C'est le réveillon de Noël donc grosse mise à jour(Bon réveillon !)!!!
 - Ajout d'un record a Win Streak
 - Nouveau mode de jeu le Shiny Finder
 - Son d'apparitions des pokemons avec leurs cris
 - Son de victoire : sound effect du pokedex
 - Son de défaite :  sound effect de combat
+
+25/12/2025
+Joyeux Noël !
+- Ajout d'un synchronisation de compte !!!
+- Ajout d'un leaderboard !!!
